@@ -37,9 +37,9 @@ type TCP struct {
 }
 
 type Config struct {
-	Host    string `yaml:"host"`
-	Port    uint   `yaml:"port"`
-	Network string `yaml:"network"`
+	Host    string
+	Port    uint
+	Network string
 }
 
 func New(cfg Config) *TCP {

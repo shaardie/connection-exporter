@@ -29,9 +29,9 @@ type DNS struct {
 }
 
 type Config struct {
-	CustomResolver bool   `yaml:"custom_resolver"`
-	Host           string `yaml:"host"`
-	Network        string `yaml:"network"`
+	CustomResolver bool
+	Host           string
+	Network        string
 }
 
 func New(cfg Config) *DNS {

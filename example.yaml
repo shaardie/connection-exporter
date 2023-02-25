@@ -20,16 +20,16 @@ tests:
     config:
       - host: example.com
       - host: example.com
-        custom_resolver: true
+        customResolver: true
         network: udp4
       - host: example.com
-        custom_resolver: true
+        customResolver: true
         network: udp6
       - host: example.com
-        custom_resolver: true
+        customResolver: true
         network: tcp4
       - host: example.com
-        custom_resolver: true
+        customResolver: true
         network: tcp6
 
   http:

@@ -34,7 +34,7 @@ func main() {
 		log.Fatalf("Failed to create logger, %v", err)
 	}
 
-	logger.Info("Initialized")
+	logger.Debugw("Initializing", "config", cfg)
 
 	tests := []Tests{}
 

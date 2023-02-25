@@ -30,8 +30,8 @@ type HTTP struct {
 }
 
 type Config struct {
-	URL     string `yaml:"url"`
-	Network string `yaml:"network"`
+	URL     string
+	Network string
 }
 
 func New(cfg Config) *HTTP {
