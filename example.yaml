@@ -1,5 +1,7 @@
 logging:
-  level: debug
+  # Log levels are debug, info, warn and error
+  level: info
+  # enable structured logging
   structured: true
 
 tests:

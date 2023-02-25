@@ -4,9 +4,9 @@ import (
 	"context"
 	"net"
 
-	"github.com/go-logr/logr"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
+	"github.com/shaardie/is-connected/pkg/logging"
 )
 
 const (
@@ -17,7 +17,7 @@ const (
 
 var (
 	metrics = promauto.NewGaugeVec(prometheus.GaugeOpts{
-		Name: "dns_success",
+		Name: "is_connected_dns_success",
 		Help: "Successful dns requests",
 	}, []string{NetworkLabel, HostLabel, ResolverLabel})
 )
@@ -62,15 +62,15 @@ func New(cfg Config) *DNS {
 
 }
 func (dns *DNS) Do(ctx context.Context) {
-	logger := logr.FromContextOrDiscard(ctx)
+	logger := logging.FromContextOrDiscard(ctx)
 
 	_, err := dns.resolver.LookupIP(ctx, "ip", dns.cfg.Host)
 	if err != nil {
 		dns.metric.Set(0)
-		logger.V(1).Info("Lookup failed", "config", dns.cfg, "error", err)
+		logger.Infow("Lookup failed", "config", dns.cfg, "error", err)
 		return
 	}
 
-	logger.V(1).Info("Lookup succeeded", "config", dns.cfg)
+	logger.Debugw("Lookup succeeded", "config", dns.cfg)
 	dns.metric.Set(1)
 }

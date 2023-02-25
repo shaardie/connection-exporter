@@ -2,11 +2,8 @@ package logging
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
-	"github.com/go-logr/logr"
-	"github.com/go-logr/zapr"
 	"go.uber.org/zap"
 )
 
@@ -15,35 +12,52 @@ type Config struct {
 	Structured bool
 }
 
-func New(ctx context.Context, cfg Config) (logr.Logger, context.Context, error) {
+type contextKey struct{}
+
+func New(ctx context.Context, cfg Config) (*zap.SugaredLogger, context.Context, error) {
+	// Start with the production configuration
 	zapCfg := zap.NewProductionConfig()
+
+	// Set output
 	zapCfg.OutputPaths = []string{"stdout"}
 
-	switch cfg.Level {
-	case "debug":
-		zapCfg.Level.SetLevel(zap.DebugLevel)
-	case "info":
-		zapCfg.Level.SetLevel(zap.InfoLevel)
-	case "warn":
-		zapCfg.Level.SetLevel(zap.WarnLevel)
-	case "error":
-		zapCfg.Level.SetLevel(zap.ErrorLevel)
-	default:
-		return logr.Logger{}, nil, errors.New("unknown log level")
+	// Set Level
+	lvl, err := zap.ParseAtomicLevel(cfg.Level)
+	if err != nil {
+		return nil, nil, fmt.Errorf("unknown log level, %w", err)
 	}
+	zapCfg.Level = lvl
 
+	// Set structured logging
 	if cfg.Structured {
 		zapCfg.Encoding = "json"
 	} else {
 		zapCfg.Encoding = "console"
 	}
 
+	// Build logger
 	zapLogger, err := zapCfg.Build()
 	if err != nil {
-		return logr.Logger{}, nil, fmt.Errorf("failed to build zap logger, %w", err)
+		return nil, nil, fmt.Errorf("failed to build zap logger, %w", err)
 	}
 
-	logger := zapr.NewLogger(zapLogger)
-	ctx = logr.NewContext(ctx, logger)
+	// Create suggared logger
+	logger := zapLogger.Sugar()
+
+	// Add suggared logger to the context
+	ctx = NewContext(ctx, logger)
+
 	return logger, ctx, nil
+}
+
+func NewContext(ctx context.Context, logger *zap.SugaredLogger) context.Context {
+	return context.WithValue(ctx, contextKey{}, logger)
+}
+
+func FromContextOrDiscard(ctx context.Context) *zap.SugaredLogger {
+	if v, ok := ctx.Value(contextKey{}).(*zap.SugaredLogger); ok {
+		return v
+	}
+
+	return zap.NewNop().Sugar()
 }

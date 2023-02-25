@@ -3,11 +3,10 @@ module github.com/shaardie/is-connected
 go 1.20
 
 require (
-	github.com/go-logr/logr v1.2.2
-	github.com/go-logr/zapr v1.2.3
 	github.com/prometheus/client_golang v1.14.0
 	github.com/spf13/viper v1.15.0
 	go.uber.org/zap v1.24.0
+	golang.org/x/sys v0.3.0
 )
 
 require (
@@ -31,7 +30,6 @@ require (
 	github.com/subosito/gotenv v1.4.2 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
-	golang.org/x/sys v0.3.0 // indirect
 	golang.org/x/text v0.5.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect

@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/go-logr/logr"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
+	"github.com/shaardie/is-connected/pkg/logging"
 )
 
 const (
@@ -18,7 +18,7 @@ const (
 
 var (
 	metric = promauto.NewGaugeVec(prometheus.GaugeOpts{
-		Name: "http_success",
+		Name: "is_connected_http_success",
 		Help: "Successful http request",
 	}, []string{NetworkLabel, URLLabel})
 )
@@ -64,15 +64,15 @@ func New(cfg Config) *HTTP {
 }
 
 func (http *HTTP) Do(ctx context.Context) {
-	logger := logr.FromContextOrDiscard(ctx)
+	logger := logging.FromContextOrDiscard(ctx)
 
 	resp, err := http.client.Get(http.cfg.URL)
 	if err != nil {
 		http.metric.Set(0)
-		logger.V(1).Info("HTTP request failed", "config", http.cfg, "error", err)
+		logger.Infow("HTTP request failed", "config", http.cfg, "error", err)
 		return
 	}
 	resp.Body.Close()
-	logger.V(1).Info("HTTP request succeeded", "config", http.cfg)
+	logger.Debugw("HTTP request succeeded", "config", http.cfg)
 	http.metric.Set(1)
 }
