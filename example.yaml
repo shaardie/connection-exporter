@@ -1,0 +1,43 @@
+logging:
+  level: info
+  structured: true
+
+tests:
+  tcp:
+    enabled: true
+    config:
+      - host: example.com
+        port: 80
+        network: tcp4
+      - host: example.com
+        port: 80
+        network: tcp6
+
+  dns:
+    enabled: true
+    config:
+      - host: example.com
+      - host: example.com
+        custom_resolver: true
+        network: udp4
+      - host: example.com
+        custom_resolver: true
+        network: udp6
+      - host: example.com
+        custom_resolver: true
+        network: tcp4
+      - host: example.com
+        custom_resolver: true
+        network: tcp6
+
+  http:
+    enabled: true
+    config:
+      - url: http://example.com
+        network: tcp4
+      - url: http://example.com
+        network: tcp6
+      - url: https://example.com
+        network: tcp4
+      - url: https://example.com
+        network: tcp6
