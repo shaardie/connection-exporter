@@ -6,19 +6,16 @@ import (
 
 	"github.com/shaardie/is-connected/pkg/dns"
 	"github.com/shaardie/is-connected/pkg/http"
+	"github.com/shaardie/is-connected/pkg/logging"
 	"github.com/shaardie/is-connected/pkg/tcp"
+
 	"github.com/spf13/viper"
 )
 
 type Config struct {
-	Logging logging
+	Logging logging.Config
 	Server  server
 	Tests   tests
-}
-
-type logging struct {
-	Level      string
-	Structured bool
 }
 
 type server struct {
@@ -49,7 +46,7 @@ func New(filename string) (*Config, error) {
 		Interval: 15 * time.Second,
 	})
 
-	viper.SetDefault("logging", logging{
+	viper.SetDefault("logging", logging.Config{
 		Level:      "info",
 		Structured: true,
 	})

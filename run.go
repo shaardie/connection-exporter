@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"log"
 	"net/http"
 	"time"
@@ -9,72 +10,71 @@ import (
 	"github.com/shaardie/is-connected/pkg/config"
 	"github.com/shaardie/is-connected/pkg/dns"
 	iscHTTP "github.com/shaardie/is-connected/pkg/http"
+	"github.com/shaardie/is-connected/pkg/logging"
 	"github.com/shaardie/is-connected/pkg/tcp"
-	"github.com/spf13/pflag"
 
-	"github.com/go-logr/logr"
-	"github.com/go-logr/zapr"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"go.uber.org/zap"
 )
 
-type Doer interface {
+type Tests interface {
 	Do(context.Context)
 }
 
 func run() {
-
-	cfgFilename := pflag.CommandLine.String("config", "", "Configration file")
-	pflag.Parse()
+	cfgFilename := flag.String("config", "", "Configration file")
+	flag.Parse()
 
 	cfg, err := config.New(*cfgFilename)
 	if err != nil {
 		log.Fatalf("Failed to configure, %v", err)
 	}
 
-	// Log
-	var zapLog *zap.Logger
-	if cfg.Logging.Level == "debug" {
-		zapLog, err = zap.NewDevelopment()
-	} else {
-		zapLog, err = zap.NewProduction()
-	}
+	logger, ctx, err := logging.New(context.Background(), cfg.Logging)
 	if err != nil {
-		log.Fatalf("Failed to create zap logger, %v", err)
+		log.Fatalf("Failed to create logger, %v", err)
 	}
-	log := zapr.NewLogger(zapLog)
 
-	log.Info("Config", "Config", cfg)
-
-	// Context
-	ctx := context.Background()
-	ctx = logr.NewContext(ctx, log)
-
-	doers := []Doer{}
+	tests := []Tests{}
 
 	// TCP
-	for _, tcpConfig := range cfg.Tests.TCP.Config {
-		doers = append(doers, tcp.New(ctx, tcpConfig))
+	if cfg.Tests.TCP.Enabled {
+		logger.V(1).Info("TCP Tests enabled")
+		for _, config := range cfg.Tests.TCP.Config {
+			logger.V(1).Info("Initialize TCP Test", "config", config)
+			tests = append(tests, tcp.New(config))
+		}
 	}
 
 	// DNS
-	for _, dnsConfig := range cfg.Tests.DNS.Config {
-		doers = append(doers, dns.New(ctx, dnsConfig))
+	if cfg.Tests.DNS.Enabled {
+		logger.V(1).Info("DNS Tests enabled")
+		for _, config := range cfg.Tests.DNS.Config {
+			logger.V(1).Info("Initialize DNS Test", "config", config)
+			tests = append(tests, dns.New(config))
+		}
 	}
 
 	// HTTP
-	for _, httpConfig := range cfg.Tests.HTTP.Config {
-		doers = append(doers, iscHTTP.New(ctx, httpConfig))
+	if cfg.Tests.HTTP.Enabled {
+		logger.V(1).Info("HTTP Tests enabled")
+		for _, config := range cfg.Tests.HTTP.Config {
+			logger.V(1).Info("Initialize HTTP Test", "config", config)
+			tests = append(tests, iscHTTP.New(config))
+		}
 	}
 
 	go func() {
+		logger.V(1).Info("start metrics server", "server", cfg.Server)
 		http.Handle("/metrics", promhttp.Handler())
 		http.ListenAndServe(cfg.Server.Address, nil)
 	}()
 
+	logger.Info("Initialized")
+
 	for {
-		for _, doer := range doers {
-			go doer.Do(ctx)
+		logger.Info("Loop through tests")
+		for _, test := range tests {
+			go test.Do(ctx)
 		}
 		time.Sleep(cfg.Server.Interval)
 	}

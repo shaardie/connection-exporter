@@ -35,10 +35,7 @@ type Config struct {
 	Network string `yaml:"network"`
 }
 
-func New(ctx context.Context, cfg Config) *TCP {
-	logger := logr.FromContextOrDiscard(ctx)
-
-	logger.Info("Initialize TCP Test", "config", cfg)
+func New(cfg Config) *TCP {
 	return &TCP{
 		cfg:    cfg,
 		dialer: net.Dialer{},

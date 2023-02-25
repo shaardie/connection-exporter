@@ -34,11 +34,7 @@ type Config struct {
 	Network        string `yaml:"network"`
 }
 
-func New(ctx context.Context, cfg Config) *DNS {
-	logger := logr.FromContextOrDiscard(ctx)
-
-	logger.Info("Initialize DNS Test", "config", cfg)
-
+func New(cfg Config) *DNS {
 	resolverLabel := "system"
 	if cfg.CustomResolver {
 		resolverLabel = "custom"

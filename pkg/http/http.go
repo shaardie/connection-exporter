@@ -34,10 +34,7 @@ type Config struct {
 	Network string `yaml:"network"`
 }
 
-func New(ctx context.Context, cfg Config) *HTTP {
-	logger := logr.FromContextOrDiscard(ctx)
-	logger.Info("Initialize HTTP Test", "config", cfg)
-
+func New(cfg Config) *HTTP {
 	dialer := &net.Dialer{
 		Timeout:   30 * time.Second,
 		KeepAlive: 30 * time.Second,
