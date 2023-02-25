@@ -1,0 +1,37 @@
+address: 127.0.0.1:8144
+debug: true
+interval: 15s
+as_server: false
+
+tcp:
+  - host: example.com
+    port: 80
+    network: tcp4
+  - host: example.com
+    port: 80
+    network: tcp6
+
+dns:
+  - host: example.com
+  - host: example.com
+    custom_resolver: true
+    network: udp4
+  - host: example.com
+    custom_resolver: true
+    network: udp6
+  - host: example.com
+    custom_resolver: true
+    network: tcp4
+  - host: example.com
+    custom_resolver: true
+    network: tcp6
+
+http:
+  - url: http://example.com
+    network: tcp4
+  - url: http://example.com
+    network: tcp6
+  - url: https://example.com
+    network: tcp4
+  - url: https://example.com
+    network: tcp6
