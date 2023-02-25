@@ -7,11 +7,11 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/shaardie/is-connected/pkg/config"
-	"github.com/shaardie/is-connected/pkg/dns"
-	iscHTTP "github.com/shaardie/is-connected/pkg/http"
-	"github.com/shaardie/is-connected/pkg/logging"
-	"github.com/shaardie/is-connected/pkg/tcp"
+	"github.com/shaardie/connection-exporter/pkg/config"
+	"github.com/shaardie/connection-exporter/pkg/dns"
+	ceHTTP "github.com/shaardie/connection-exporter/pkg/http"
+	"github.com/shaardie/connection-exporter/pkg/logging"
+	"github.com/shaardie/connection-exporter/pkg/tcp"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
@@ -61,7 +61,7 @@ func main() {
 		logger.Infow("HTTP Tests enabled")
 		for _, config := range cfg.Tests.HTTP.Config {
 			logger.Infow("Initialize HTTP Test", "config", config)
-			tests = append(tests, iscHTTP.New(config))
+			tests = append(tests, ceHTTP.New(config))
 		}
 	}
 

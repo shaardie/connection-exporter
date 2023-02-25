@@ -8,7 +8,7 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
-	"github.com/shaardie/is-connected/pkg/logging"
+	"github.com/shaardie/connection-exporter/pkg/logging"
 	"golang.org/x/sys/unix"
 )
 
@@ -20,11 +20,11 @@ const (
 
 var (
 	successMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
-		Name: "is_connected_tcp_success",
+		Name: "connection_exporter_tcp_success",
 		Help: "Successful tcp request",
 	}, []string{NetworkLabel, HostLabel, PortLabel})
 	rttMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
-		Name: "is_connected_tcp_rtt",
+		Name: "connection_exporter_tcp_rtt",
 		Help: "TCP Round Trip Time in seconds",
 	}, []string{NetworkLabel, HostLabel, PortLabel})
 )

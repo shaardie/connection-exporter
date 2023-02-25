@@ -1,4 +1,4 @@
-module github.com/shaardie/is-connected
+module github.com/shaardie/connection-exporter
 
 go 1.20
 

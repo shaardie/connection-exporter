@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/shaardie/is-connected/pkg/dns"
-	"github.com/shaardie/is-connected/pkg/http"
-	"github.com/shaardie/is-connected/pkg/logging"
-	"github.com/shaardie/is-connected/pkg/tcp"
+	"github.com/shaardie/connection-exporter/pkg/dns"
+	"github.com/shaardie/connection-exporter/pkg/http"
+	"github.com/shaardie/connection-exporter/pkg/logging"
+	"github.com/shaardie/connection-exporter/pkg/tcp"
 
 	"github.com/spf13/viper"
 )

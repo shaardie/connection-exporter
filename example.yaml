@@ -1,8 +1,8 @@
 logging:
   # Log levels are debug, info, warn and error
-  level: info
+  level: debug
   # enable structured logging
-  structured: true
+  structured: false
 
 tests:
   tcp:

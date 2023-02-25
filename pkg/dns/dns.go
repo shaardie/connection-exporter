@@ -6,7 +6,7 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
-	"github.com/shaardie/is-connected/pkg/logging"
+	"github.com/shaardie/connection-exporter/pkg/logging"
 )
 
 const (
@@ -17,7 +17,7 @@ const (
 
 var (
 	metrics = promauto.NewGaugeVec(prometheus.GaugeOpts{
-		Name: "is_connected_dns_success",
+		Name: "connection_exporter_dns_success",
 		Help: "Successful dns requests",
 	}, []string{NetworkLabel, HostLabel, ResolverLabel})
 )

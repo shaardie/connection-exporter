@@ -8,7 +8,7 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
-	"github.com/shaardie/is-connected/pkg/logging"
+	"github.com/shaardie/connection-exporter/pkg/logging"
 )
 
 const (
@@ -18,7 +18,7 @@ const (
 
 var (
 	metric = promauto.NewGaugeVec(prometheus.GaugeOpts{
-		Name: "is_connected_http_success",
+		Name: "connection_exporter_http_success",
 		Help: "Successful http request",
 	}, []string{NetworkLabel, URLLabel})
 )
