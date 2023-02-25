@@ -24,7 +24,7 @@ var (
 		Help: "Successful tcp request",
 	}, []string{NetworkLabel, HostLabel, PortLabel})
 	rttMetric = promauto.NewGaugeVec(prometheus.GaugeOpts{
-		Name: "connection_exporter_tcp_rtt",
+		Name: "connection_exporter_tcp_rtt_seconds",
 		Help: "TCP Round Trip Time in seconds",
 	}, []string{NetworkLabel, HostLabel, PortLabel})
 )
