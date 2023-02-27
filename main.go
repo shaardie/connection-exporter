@@ -65,6 +65,10 @@ func main() {
 		}
 	}
 
+	if len(tests) == 0 {
+		logger.Info("No tests specified")
+	}
+
 	logger.Infow("Start metrics server", "server", cfg.Server)
 	http.Handle("/metrics", promhttp.Handler())
 	go http.ListenAndServe(cfg.Server.Address, nil)

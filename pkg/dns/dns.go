@@ -71,6 +71,6 @@ func (dns *DNS) Do(ctx context.Context) {
 		return
 	}
 
-	logger.Debugw("Lookup succeeded", "config", dns.cfg)
+	logger.Infow("Lookup succeeded", "config", dns.cfg)
 	dns.metric.Set(1)
 }

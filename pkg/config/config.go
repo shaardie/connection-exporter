@@ -41,37 +41,11 @@ type tests struct {
 }
 
 func New(filename string) (*Config, error) {
-	viper.SetDefault("server", server{
-		Address:  "127.0.0.1:8144",
-		Interval: 15 * time.Second,
-	})
+	viper.SetDefault("server.address", "127.0.0.1:8144")
+	viper.SetDefault("server.interval", 15*time.Second)
+	viper.SetDefault("logging.level", "info")
+	viper.SetDefault("logging.structured", true)
 
-	viper.SetDefault("logging", logging.Config{
-		Level:      "info",
-		Structured: true,
-	})
-
-	viper.SetDefault("tests", tests{
-		TCP: struct {
-			Enabled bool
-			Config  []tcp.Config
-		}{
-			Enabled: true,
-			Config: []tcp.Config{
-				{
-					Host:    "example.com",
-					Port:    80,
-					Network: "tcp4",
-				},
-				{
-					Host:    "example.com",
-					Port:    80,
-					Network: "tcp6",
-				},
-			},
-		},
-	},
-	)
 	if filename != "" {
 		viper.SetConfigFile(filename)
 		viper.SetConfigType("yaml")
@@ -80,7 +54,6 @@ func New(filename string) (*Config, error) {
 		if err != nil {
 			return nil, fmt.Errorf("failed to read config, %w", err)
 		}
-
 	}
 
 	cfg := &Config{}

@@ -69,10 +69,10 @@ func (http *HTTP) Do(ctx context.Context) {
 	resp, err := http.client.Get(http.cfg.URL)
 	if err != nil {
 		http.metric.Set(0)
-		logger.Infow("HTTP request failed", "config", http.cfg, "error", err)
+		logger.Infow("Request failed", "config", http.cfg, "error", err)
 		return
 	}
 	resp.Body.Close()
-	logger.Debugw("HTTP request succeeded", "config", http.cfg)
+	logger.Infow("Request succeeded", "config", http.cfg)
 	http.metric.Set(1)
 }

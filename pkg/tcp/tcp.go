@@ -72,7 +72,7 @@ func (tcp *TCP) Do(ctx context.Context) {
 	}
 	defer conn.Close()
 
-	logger.Debugw("Dialing succeeded", "config", tcp.cfg)
+	logger.Infow("Dialing succeeded", "config", tcp.cfg)
 	tcp.successMetric.Set(1)
 
 	tcpConn, ok := conn.(*net.TCPConn)
