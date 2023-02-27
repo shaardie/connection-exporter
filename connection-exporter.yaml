@@ -1,8 +1,8 @@
-logging:
-  # Log levels are debug, info, warn and error
-  level: debug
-  # enable structured logging
-  structured: false
+# Example config
+
+server:
+  address: 0.0.0.0:8144
+  interval: 15s
 
 tests:
   tcp:
@@ -24,10 +24,10 @@ tests:
         network: udp4
       - host: example.com
         customResolver: true
-        network: udp6
+        network: tcp4
       - host: example.com
         customResolver: true
-        network: tcp4
+        network: udp6
       - host: example.com
         customResolver: true
         network: tcp6
@@ -37,9 +37,9 @@ tests:
     config:
       - url: http://example.com
         network: tcp4
-      - url: http://example.com
-        network: tcp6
       - url: https://example.com
         network: tcp4
+      - url: http://example.com
+        network: tcp6
       - url: https://example.com
         network: tcp6
