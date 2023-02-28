@@ -1,45 +1,13 @@
 # Example config
 
 server:
-  address: 0.0.0.0:8144
-  interval: 15s
+  address: 127.0.0.1:8144
+  interval: 10s
 
 tests:
-  tcp:
-    enabled: true
-    config:
-      - host: example.com
-        port: 80
-        network: tcp4
-      - host: example.com
-        port: 80
-        network: tcp6
-
-  dns:
-    enabled: true
-    config:
-      - host: example.com
-      - host: example.com
-        customResolver: true
-        network: udp4
-      - host: example.com
-        customResolver: true
-        network: tcp4
-      - host: example.com
-        customResolver: true
-        network: udp6
-      - host: example.com
-        customResolver: true
-        network: tcp6
 
   http:
     enabled: true
     config:
-      - url: http://example.com
+      - url: http://google.de
         network: tcp4
-      - url: https://example.com
-        network: tcp4
-      - url: http://example.com
-        network: tcp6
-      - url: https://example.com
-        network: tcp6

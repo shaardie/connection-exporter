@@ -2,6 +2,7 @@ package http
 
 import (
 	"context"
+	"fmt"
 	"net"
 	"net/http"
 	"time"
@@ -12,15 +13,16 @@ import (
 )
 
 const (
-	NetworkLabel = "network"
-	URLLabel     = "url"
+	networkLabel  = "network"
+	urlLabel      = "url"
+	redirectLabel = "redirect"
 )
 
 var (
 	metric = promauto.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "connection_exporter_http_success",
 		Help: "Successful http request",
-	}, []string{NetworkLabel, URLLabel})
+	}, []string{networkLabel, urlLabel, redirectLabel})
 )
 
 type HTTP struct {
@@ -30,8 +32,9 @@ type HTTP struct {
 }
 
 type Config struct {
-	URL     string
-	Network string
+	URL      string
+	Redirect bool
+	Network  string
 }
 
 func New(cfg Config) *HTTP {
@@ -40,9 +43,17 @@ func New(cfg Config) *HTTP {
 		KeepAlive: 30 * time.Second,
 	}
 
+	checkRedirect := func(req *http.Request, via []*http.Request) error {
+		return http.ErrUseLastResponse
+	}
+	if cfg.Redirect {
+		checkRedirect = nil
+	}
+
 	return &HTTP{
 		cfg: cfg,
 		client: http.Client{
+			CheckRedirect: checkRedirect,
 			Transport: &http.Transport{
 				Proxy: http.ProxyFromEnvironment,
 				DialContext: func(ctx context.Context, _, addr string) (net.Conn, error) {
@@ -57,8 +68,9 @@ func New(cfg Config) *HTTP {
 		},
 		metric: metric.With(
 			prometheus.Labels{
-				NetworkLabel: cfg.Network,
-				URLLabel:     cfg.URL,
+				networkLabel:  cfg.Network,
+				urlLabel:      cfg.URL,
+				redirectLabel: fmt.Sprintf("%v", cfg.Redirect),
 			}),
 	}
 }
