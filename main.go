@@ -69,8 +69,12 @@ func main() {
 		logger.Info("No tests specified")
 	}
 
-	logger.Infow("Start metrics server", "server", cfg.Server)
+	logger.Infow("Start http server for metrics and health", "server", cfg.Server)
 	http.Handle("/metrics", promhttp.Handler())
+	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		logger.Debug("Health check")
+		w.Write([]byte("OK"))
+	})
 	go http.ListenAndServe(cfg.Server.Address, nil)
 
 	for {
